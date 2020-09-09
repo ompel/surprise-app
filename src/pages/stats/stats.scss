@@ -1,0 +1,10 @@
+.stats {
+  &__age {
+    text-align: center;
+    &--big {
+      font-weight: bold;
+      font-size: 2rem;
+      margin-left: 5px;
+    }
+  }
+}

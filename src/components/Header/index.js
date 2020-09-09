@@ -18,17 +18,17 @@ const getPageName = (pathname) => {
 
 const HeaderLink = ({ pathname }) => {
   switch (pathname) {
-    case "/stats":
+    case "/":
       return (
-        <Link className="header__header-link" to="/">
-          Home
+        <Link className="header__header-link" to="/stats">
+          Statistics
         </Link>
       );
 
     default:
       return (
-        <Link className="header__header-link" to="/stats">
-          Statistics
+        <Link className="header__header-link" to="/">
+          Home
         </Link>
       );
   }

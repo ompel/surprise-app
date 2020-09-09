@@ -3,11 +3,11 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.scss";
 
 // Pages
-import { Home, Stats, FourOhFour } from "./pages";
+import { Home, Stats, Response, FourOhFour } from "./pages";
 
 // Components
 import Header from "./components/Header";
-// const { Header, Footer, Sider, Content } = Layout;
+import { ResponseProvider } from "./components/ResponseContext";
 
 function App() {
   return (
@@ -17,8 +17,15 @@ function App() {
         <Route exact path="/stats">
           <Stats />
         </Route>
+        <Route exact path="/response">
+          <ResponseProvider>
+            <Response />
+          </ResponseProvider>
+        </Route>
         <Route exact path="/">
-          <Home />
+          <ResponseProvider>
+            <Home />
+          </ResponseProvider>
         </Route>
         <Route path="*">
           <FourOhFour />

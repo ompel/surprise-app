@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import moment from "moment";
+import axios from "axios";
 import "./home.scss";
 
 // Components
-import { Form, Input, Button, DatePicker, Row, Col } from "antd";
+import { Form, Input, Button, DatePicker, Row, Col, Spin } from "antd";
 import CountrySelect from "../../components/CountrySelect";
+import { useSetResponse } from "../../components/ResponseContext";
 
 const layout = {
   labelCol: {
@@ -22,9 +25,17 @@ const tailLayout = {
 };
 
 const Home = () => {
-  const onFinish = (values) => {
-    // TODO: Call BE with data
-    console.log("Success:", values);
+  const history = useHistory();
+  const setResponse = useSetResponse();
+  const [fetchingResponse, setFetchingResponse] = useState(false);
+  const onFinish = async (values) => {
+    // console.log("Success:", values);
+    setFetchingResponse(true);
+    const response = await axios.post("/surprise", values);
+    setFetchingResponse(false);
+    console.log(response);
+    setResponse(response.data);
+    history.push(`/response#${response.data.type}`);
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -35,64 +46,66 @@ const Home = () => {
     <div className="home">
       <Row justify="center">
         <Col span={5}>
-          <Form
-            {...layout}
-            name="surpriseData"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            colon={false}
-            labelAlign="left"
-            initialValues={{
-              name: "omri",
-              dateOfBirth: moment(),
-              country: "Israel",
-            }}
-          >
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your name!",
-                },
-              ]}
+          <Spin spinning={fetchingResponse}>
+            <Form
+              {...layout}
+              name="surpriseData"
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+              colon={false}
+              labelAlign="left"
+              initialValues={{
+                name: "omri",
+                dateOfBirth: moment(),
+                country: "Israel",
+              }}
             >
-              <Input />
-            </Form.Item>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your name!",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
 
-            <Form.Item
-              label="Date of Birth"
-              name="dateOfBirth"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your date of birth!",
-                },
-              ]}
-            >
-              <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
-            </Form.Item>
+              <Form.Item
+                label="Date of Birth"
+                name="dateOfBirth"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your date of birth!",
+                  },
+                ]}
+              >
+                <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+              </Form.Item>
 
-            <Form.Item
-              label="Country"
-              name="country"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select your country!",
-                },
-              ]}
-            >
-              <CountrySelect />
-            </Form.Item>
+              <Form.Item
+                label="Country"
+                name="country"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your country!",
+                  },
+                ]}
+              >
+                <CountrySelect />
+              </Form.Item>
 
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
+              <Form.Item {...tailLayout}>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </Spin>
         </Col>
       </Row>
     </div>
