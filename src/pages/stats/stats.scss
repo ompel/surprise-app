@@ -1,4 +1,8 @@
 .stats {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 100%;
   &__age {
     text-align: center;
     &--big {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import moment from "moment";
 import axios from "axios";
 import "./home.scss";
 
@@ -54,11 +53,6 @@ const Home = () => {
               onFinishFailed={onFinishFailed}
               colon={false}
               labelAlign="left"
-              initialValues={{
-                name: "zalo",
-                dateOfBirth: moment(),
-                country: "Israel",
-              }}
             >
               <Form.Item
                 label="Name"

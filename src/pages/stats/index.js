@@ -22,8 +22,6 @@ const Stats = () => {
     return null;
   }
 
-  console.log(stats);
-
   return (
     <div className="stats">
       <Row justify="center" gutter={[8, 48]}>

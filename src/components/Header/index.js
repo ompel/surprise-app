@@ -36,7 +36,6 @@ const HeaderLink = ({ pathname }) => {
 
 const Header = () => {
   const location = useLocation();
-  console.log(location);
   return (
     <div className="header">
       <span className="header__page-name">
