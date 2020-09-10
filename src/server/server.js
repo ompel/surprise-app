@@ -1,7 +1,9 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const moment = require("moment");
-const chuckNorris = require("./utils/chuckNorris");
+import express from "express";
+import bodyParser from "body-parser";
+import moment from "moment";
+import * as chuckNorris from "./utils/chuckNorris.js";
+import * as trump from "./utils/trump.js";
+import * as memes from "./utils/memes.js";
 
 const stats = [];
 
@@ -22,22 +24,29 @@ app.post("/surprise", async (req, res) => {
   let responseType;
   console.log({ age, year: dateOfBirthMoment.year() });
 
-  if (true || dateOfBirthMoment.year() < 2000) {
+  if (dateOfBirthMoment.year() <= 2000) {
     // Chuck norris
-    const joke = await chuckNorris.joke();
-    responseType = "chuck-norris";
-    res.json({
-      value: joke.data.value,
-      image: joke.data.icon_url,
-      type: responseType,
-    });
+    const joke = await chuckNorris.get();
+    responseType = joke.type;
+    res.json(joke);
   } else if (
     dateOfBirthMoment.year() > 2000 &&
-    (!normalizedName.startsWith("a") || !normalizedName.startsWith("z"))
+    !(normalizedName.startsWith("a") || normalizedName.startsWith("z"))
   ) {
     // trump
+    console.log(dateOfBirthMoment.year());
+    const quote = await trump.get({
+      name: normalizedName,
+      imageId: dateOfBirthMoment.day(),
+    });
+    responseType = quote.type;
+    res.json(quote);
   } else if (!normalizedName.startsWith("q")) {
     // meme
+    const meme = await memes.get({ name: normalizedName });
+    responseType = meme.type;
+
+    res.json(meme);
   } else {
     // random
   }
@@ -47,7 +56,6 @@ app.post("/surprise", async (req, res) => {
 
 app.get("/stats", (req, res) => {
   let ageSum = 0;
-  // Math.floor(stats.reduce((acc, curr) => (acc += curr.age)) / stats.length);
   const types = {};
   const countries = {};
   stats.forEach((stat) => {
@@ -66,8 +74,14 @@ app.get("/stats", (req, res) => {
   const averageAge = Math.floor(ageSum / stats.length);
   res.json({
     averageAge,
-    types,
-    countries,
+    types: Object.entries(types).map(([type, val]) => ({
+      name: type,
+      count: val,
+    })),
+    countries: Object.entries(countries).map(([country, val]) => ({
+      name: country,
+      count: val,
+    })),
   });
 });
 

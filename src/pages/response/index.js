@@ -16,9 +16,7 @@ const Response = () => {
   return (
     <div className="response">
       <div className="response__text">{response.value}</div>
-      <div className="response__img">
-        <img src={response.image} alt="chuck norris icon" />
-      </div>
+      <img className="response__img" src={response.image} alt={response.type} />
     </div>
   );
 };

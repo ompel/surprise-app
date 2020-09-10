@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+
 import "./stats.scss";
 
 // Components
 import { Row, Col } from "antd";
+import GenericBarChart from "./GenericBarChart";
 
 const Stats = () => {
   const [stats, setStats] = useState(undefined);
@@ -33,58 +26,25 @@ const Stats = () => {
 
   return (
     <div className="stats">
-      <Row justify="center">
+      <Row justify="center" gutter={[8, 48]}>
         <Col>
           <div className="stats__age">
             <div>Average Users Age: </div>
-            <div className="stats__age--big">500</div>
+            <div className="stats__age--big">
+              {stats.averageAge == null ? "N/A" : stats.averageAge}
+            </div>
           </div>
         </Col>
       </Row>
-      <Row>
+      <Row style={{ height: 250 }} gutter={[8, 48]}>
         <Col span={12}>
-          <ResponsiveContainer width="100%" height={500}>
-            <BarChart
-              data={Object.entries(stats.countries).map(([country, val]) => ({
-                name: country,
-                count: val,
-              }))}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
+          <GenericBarChart
+            data={stats.countries}
+            name="Countries Distribution"
+          />
         </Col>
         <Col span={12}>
-          <ResponsiveContainer width="100%" height={500}>
-            <BarChart
-              data={Object.entries(stats.types).map(([type, val]) => ({
-                name: type,
-                count: val,
-              }))}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="count" fill="#8884d8" />
-            </BarChart>
-          </ResponsiveContainer>
+          <GenericBarChart data={stats.types} name="Types Distribution" />
         </Col>
       </Row>
     </div>

@@ -55,7 +55,7 @@ const Home = () => {
               colon={false}
               labelAlign="left"
               initialValues={{
-                name: "omri",
+                name: "zalo",
                 dateOfBirth: moment(),
                 country: "Israel",
               }}
